@@ -1,11 +1,44 @@
+using Biblioteca.Application.Interfaces;
+using Biblioteca.Application.Services;
+using Biblioteca.Domain.Validation;
+using Biblioteca.Infrastructure.Persistence;
+using Biblioteca.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Persistencia (EF Core + SQLite)
+builder.Services.AddDbContext<LibraryDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+
+// Repositorios (Infrastructure -> Application.Interfaces)
+builder.Services.AddScoped<IAutorRepository, AutorRepository>();
+builder.Services.AddScoped<ILibroRepository, LibroRepository>();
+
+// Validadores de dominio (puros, sin dependencias de infraestructura)
+builder.Services.AddScoped<IAutorValidator, AutorValidator>();
+builder.Services.AddScoped<ILibroValidator, LibroValidator>();
+
+// Utilidades compartidas de Application
+builder.Services.AddScoped<Biblioteca.Application.Common.ITextNormalizer, Biblioteca.Application.Common.TextNormalizer>();
+
+// Servicios de aplicacion (orquestan validadores + repositorios)
+builder.Services.AddScoped<AutorService>();
+builder.Services.AddScoped<LibroService>();
+
 var app = builder.Build();
+
+// Aplica migraciones pendientes al iniciar
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<LibraryDbContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -16,29 +49,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

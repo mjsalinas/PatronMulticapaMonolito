@@ -1,6 +1,7 @@
-
 using System.Globalization;
 using System.Text.RegularExpressions;
+
+namespace Biblioteca.Application.Common;
 
 public class TextNormalizer : ITextNormalizer
 {

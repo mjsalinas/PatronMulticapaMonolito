@@ -1,6 +1,7 @@
-
 using System.Text.RegularExpressions;
 using Biblioteca.Domain.Entities;
+
+namespace Biblioteca.Domain.Validation;
 
 public class AutorValidator : IAutorValidator
 {

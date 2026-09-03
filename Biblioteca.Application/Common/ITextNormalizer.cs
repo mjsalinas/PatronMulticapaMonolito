@@ -1,3 +1,4 @@
+namespace Biblioteca.Application.Common;
 
 public interface ITextNormalizer
 {

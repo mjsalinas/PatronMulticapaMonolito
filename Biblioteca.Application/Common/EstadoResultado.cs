@@ -1,6 +1,9 @@
+namespace Biblioteca.Application.Common;
+
 public enum EstadoResultado
 {
-    Exito, 
+    Exito,
     NoEncontrado,
-    Invalido
+    Invalido,
+    Conflicto
 }

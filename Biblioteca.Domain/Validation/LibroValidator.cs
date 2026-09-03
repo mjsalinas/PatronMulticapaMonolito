@@ -1,6 +1,8 @@
 using System.Text.RegularExpressions;
 using Biblioteca.Domain.Entities;
 
+namespace Biblioteca.Domain.Validation;
+
 public class LibroValidator : ILibroValidator
 {
     private const int AnioMinimoPublicacion = 1440;

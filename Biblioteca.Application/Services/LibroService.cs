@@ -1,5 +1,5 @@
 using Biblioteca.Application.Common;
-using Biblioteca.Application.Interfaces;
+using Biblioteca.Application.Interfaces.Repositories;
 using Biblioteca.Domain.Entities;
 using Biblioteca.Domain.Validation;
 

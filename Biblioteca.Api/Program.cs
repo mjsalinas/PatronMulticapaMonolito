@@ -1,4 +1,4 @@
-using Biblioteca.Application.Interfaces;
+using Biblioteca.Application.Interfaces.Repositories;
 using Biblioteca.Application.Services;
 using Biblioteca.Domain.Validation;
 using Biblioteca.Infrastructure.Persistence;

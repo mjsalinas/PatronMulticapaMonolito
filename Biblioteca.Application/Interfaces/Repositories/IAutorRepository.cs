@@ -1,9 +1,14 @@
-// ARCHIVO OBSOLETO: reemplazado por Biblioteca.Application/Interfaces/IAutorRepository.cs
-// Se conserva (sin poder eliminarse desde este entorno) y se ubica en un namespace propio
-// para que NO choque ni oculte la interfaz real. Seguro de borrar manualmente.
-namespace Biblioteca.Application.Interfaces.Repositories.Obsoleto;
+using Biblioteca.Domain.Entities;
+
+namespace Biblioteca.Application.Interfaces.Repositories;
 
 public interface IAutorRepository
 {
-
+    Task<List<Autor>> GetAllAsync();
+    Task<Autor?> GetByIdAsync(int id);
+    Task AddAsync(Autor autor);
+    Task UpdateAsync(Autor autor);
+    Task DeleteAsync(Autor autor);
+    Task<bool> ExistsAsync(int id);
+    Task<bool> ExistsDuplicadoAsync(string nombre, int? idExcluir = null);
 }
